@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+#include <sstream>
 class LinkedList; //这里声明一下为了声明LinkedNode为ListNode 的友元类
 
 
@@ -9,7 +11,15 @@ private :
 	ListNode* nextData;
 public:
 	ListNode() :m_Data(0), nextData(NULL) {}
-	ListNode(int a) :m_Data(a), nextData(NULL) {}
+	ListNode(const int element_) :m_Data(element_), nextData(NULL) {}
+	ListNode(const int element_, ListNode* next)
+	{
+		//this->nextData = next;
+		this->m_Data = element_;
+		int size = sizeof(ListNode);
+		memcpy_s((ListNode*)nextData, size, (ListNode*) next, size);
+	}
+
 	friend class LinkedList;
 };
 
@@ -24,11 +34,12 @@ public:
 		m_pFirstData = new ListNode();
 		m_pFirstData->m_Data = listNode_->m_Data;
 		m_pFirstData->nextData = listNode_->nextData;
-
 	}
+
 
 	void printData();
 	void pushDataFront(int data);
+	void insertData(const int& data, int index);
 	void pushDataBack(int data);
 	void deteteData(int data);
 	void clearData();
@@ -62,5 +73,33 @@ void LinkedList::printData()
 
 void LinkedList::pushDataFront(int data)
 {
+	m_pFirstData = new ListNode(data, m_pFirstData);
+}
+
+void LinkedList::insertData(const int& data, int index)
+{
+	if (index < 0)
+	{
+		std::ostringstream oss;
+		oss << "index " << index;
+	}
+	else {
+		if (index == 0)
+		{
+			//在链表头插入数据
+			m_pFirstData = new ListNode(data, m_pFirstData);
+		}
+		else {
+			ListNode* _pListData = m_pFirstData;
+			for (int i = 0; i < index - 1; i++)
+			{
+				_pListData = m_pFirstData->nextData;
+			}
+
+			//在_pListData之后插入数据
+			_pListData->nextData = new ListNode(data, _pListData->nextData);
+		}
+	}
+	
 }
 
