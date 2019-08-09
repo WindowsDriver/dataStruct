@@ -6,20 +6,28 @@ class LinkedList; //这里声明一下为了声明LinkedNode为ListNode 的友元类
 
 class ListNode
 {
-private :
+public :
 	int m_Data;
 	ListNode* nextData;
 public:
 	ListNode() :m_Data(0), nextData(NULL) {}
-	ListNode(const int element_) :m_Data(element_), nextData(NULL) {}
-	ListNode(const int element_, ListNode* next)
+	ListNode(const int& element_) :m_Data(element_), nextData(NULL) {}
+	ListNode(const int& element_, ListNode* next)
 	{
-		//this->nextData = next;
+		//int size = sizeof(ListNode);
+		//memcpy_s((ListNode*)nextData, size, (ListNode*) next, size);
 		this->m_Data = element_;
-		int size = sizeof(ListNode);
-		memcpy_s((ListNode*)nextData, size, (ListNode*) next, size);
+		this->nextData = next;
 	}
-
+	~ListNode() 
+	{
+		/*while (nextData != NULL)
+		{
+			ListNode* _pListNode = nextData->nextData;
+			delete nextData;
+			nextData = _pListNode;
+		}*/
+	}
 	friend class LinkedList;
 };
 
@@ -35,20 +43,28 @@ public:
 		m_pFirstData->m_Data = listNode_->m_Data;
 		m_pFirstData->nextData = listNode_->nextData;
 	}
+	LinkedList()
+	{
+		m_pFirstData = NULL;
+	}
 
 
 	void printData();
 	void pushDataFront(int data);
 	void insertData(const int& data, int index);
-	void pushDataBack(int data);
+	void pushDataBack(const int& data);
 	void deteteData(int data);
 	void clearData();
 	void Reverse();
 
 	~LinkedList()
 	{
-		delete m_pFirstData;
-		m_pFirstData = NULL;
+		while (m_pFirstData != NULL)
+		{
+			ListNode* _pNextData = m_pFirstData->nextData;
+			delete m_pFirstData;
+			m_pFirstData = _pNextData;
+		}
 	}
 
 };
@@ -61,7 +77,7 @@ void LinkedList::printData()
 		return;
 	}
 
-	ListNode* currentData = new ListNode;
+	ListNode* currentData = m_pFirstData;
 	while (currentData != NULL)
 	{
 		//因为linkedNode 为ListNode的友元类，所以在LinkedNode内能访问到ListNode的私有变量
@@ -101,5 +117,23 @@ void LinkedList::insertData(const int& data, int index)
 		}
 	}
 	
+}
+
+void LinkedList::pushDataBack(const int& data)
+{
+	ListNode* backData = new ListNode(data);
+	
+	if (m_pFirstData == NULL) 
+	{
+		return;
+	}
+
+	ListNode* current = m_pFirstData;
+	while(current->nextData != NULL)
+	{
+		current = current->nextData;
+	}
+
+	current->nextData = backData;
 }
 

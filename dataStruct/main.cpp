@@ -20,6 +20,16 @@ int main()
 	int ERRORCODE = memcpy_s(des, size, testStu, size);
 	delete testStu;
 	testStu = NULL;
+
+
+	ListNode* listNode = new ListNode(123);
+	LinkedList linkedList(listNode);
+	linkedList.insertData(234, 0);
+	linkedList.insertData(34, 0);
+	linkedList.insertData(4, 0);
+	linkedList.pushDataFront(888);
+	linkedList.pushDataBack(456);
+	linkedList.printData();
 	if (ERRORCODE == 0)
 	{
 		std::cout << "student " << des->data << " " << des->height << std::endl;
@@ -30,5 +40,4 @@ int main()
 	else {
 		exit(EXIT_FAILURE);
 	}
-	
 }
